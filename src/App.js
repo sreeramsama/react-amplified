@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
+import { withAuthenticator, Button, Heading } from '@aws-amplify/ui-react';
 import { listTodos } from './graphql/queries';
 import { createTodo } from './graphql/mutations';
+import '@aws-amplify/ui-react/styles.css';
 
 const initialState = {name: '', description: ''};
 
-function App() {
+function App({ signOut, user}) {
   const [formState, setFormState] = useState(initialState)
   const [todos, setTodos] = useState([])
 
@@ -41,6 +43,7 @@ function App() {
 
   return (
     <div style={styles.container}>
+      <Heading level={1}>Hello {user.userName}</Heading>
       <h2>Amplify Todos</h2>
       <input 
         style={styles.input}
@@ -63,6 +66,7 @@ function App() {
           </div>
         ))
       }
+      <Button onClick={signOut}>Sign out</Button>
     </div>
   );
 }
@@ -76,4 +80,4 @@ const styles = {
   button: { backgroundColor: 'black', color: 'white', outline: 'none', fontSize: 18, padding: '12px 0px' }
 }
 
-export default App;
+export default withAuthenticator(App);
